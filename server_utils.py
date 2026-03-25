@@ -1,6 +1,6 @@
 import os
 
-SERVER_FILES_DIR = 'server_files'
+SERVER_FILES_DIR = "server_files"
 BUFFER_SIZE = 4096
 
 os.makedirs(SERVER_FILES_DIR, exist_ok=True)
@@ -22,11 +22,11 @@ def receive_file(conn, filename, filesize):
     filename: nama file yang akan disimpan
     filesize: ukuran file dalam bytes
     """
-    conn.sendall(b"READY")  
+    conn.sendall(b"READY")
 
     filepath = os.path.join(SERVER_FILES_DIR, filename)
     received = 0
-    with open(filepath, 'wb') as f:
+    with open(filepath, "wb") as f:
         while received < filesize:
             chunk = conn.recv(min(BUFFER_SIZE, filesize - received))
             if not chunk:
@@ -55,7 +55,7 @@ def send_file(conn, filename):
         return False
 
     sent = 0
-    with open(filepath, 'rb') as f:
+    with open(filepath, "rb") as f:
         while sent < filesize:
             chunk = f.read(BUFFER_SIZE)
             if not chunk:
@@ -75,20 +75,20 @@ def parse_message(data: bytes):
       MSG|teks pesan broadcast
     Kembalikan tuple (command, args_dict)
     """
-    text = data.decode(errors='replace')
-    parts = text.split('|', 2)
+    text = data.decode(errors="replace")
+    parts = text.split("|", 2)
     cmd = parts[0].upper()
 
-    if cmd == 'LIST':
-        return ('LIST', {})
-    elif cmd == 'UPLOAD' and len(parts) >= 3:
-        return ('UPLOAD', {'filename': parts[1], 'filesize': int(parts[2])})
-    elif cmd == 'DOWNLOAD' and len(parts) >= 2:
-        return ('DOWNLOAD', {'filename': parts[1]})
-    elif cmd == 'MSG' and len(parts) >= 2:
-        return ('MSG', {'text': parts[1]})
+    if cmd == "LIST":
+        return ("LIST", {})
+    elif cmd == "UPLOAD" and len(parts) >= 3:
+        return ("UPLOAD", {"filename": parts[1], "filesize": int(parts[2])})
+    elif cmd == "DOWNLOAD" and len(parts) >= 2:
+        return ("DOWNLOAD", {"filename": parts[1]})
+    elif cmd == "MSG" and len(parts) >= 2:
+        return ("MSG", {"text": parts[1]})
     else:
-        return ('UNKNOWN', {'raw': text})
+        return ("UNKNOWN", {"raw": text})
 
 
 def broadcast(clients, sender_addr, message: str):

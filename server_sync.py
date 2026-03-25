@@ -1,10 +1,15 @@
 import socket
 from server_utils import (
-    handle_list, receive_file, send_file,
-    parse_message, broadcast, SERVER_FILES_DIR, BUFFER_SIZE
+    handle_list,
+    receive_file,
+    send_file,
+    parse_message,
+    broadcast,
+    SERVER_FILES_DIR,
+    BUFFER_SIZE,
 )
 
-HOST = '127.0.0.1'
+HOST = "127.0.0.1"
 PORT = 9090
 
 
@@ -15,28 +20,28 @@ def handle_client(conn, addr, all_clients):
         while True:
             data = conn.recv(BUFFER_SIZE)
             if not data:
-                break   
+                break
 
             cmd, args = parse_message(data)
 
-            if cmd == 'LIST':
+            if cmd == "LIST":
                 conn.sendall(handle_list())
 
-            elif cmd == 'UPLOAD':
-                filename = args['filename']
-                filesize = args['filesize']
+            elif cmd == "UPLOAD":
+                filename = args["filename"]
+                filesize = args["filesize"]
                 received = receive_file(conn, filename, filesize)
                 print(f"[UPLOAD] {filename} ({received} bytes) dari {addr}")
                 broadcast(all_clients, addr, f"upload '{filename}' ke server.")
 
-            elif cmd == 'DOWNLOAD':
-                filename = args['filename']
+            elif cmd == "DOWNLOAD":
+                filename = args["filename"]
                 ok = send_file(conn, filename)
                 if ok:
                     print(f"[DOWNLOAD] {filename} dikirim ke {addr}")
 
-            elif cmd == 'MSG':
-                text = args['text']
+            elif cmd == "MSG":
+                text = args["text"]
                 print(f"[MSG dari {addr}]: {text}")
                 broadcast(all_clients, addr, text)
 
@@ -72,5 +77,5 @@ def main():
         server.close()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
