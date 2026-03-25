@@ -151,4 +151,4 @@ Buat satu file teks di client_files/testing.txt (isinya bebas) sebagai bahan upl
 | Kekurangan         | Tidak scalable           | Ada limit socket (terutama Win)  | Lebih kompleks dari select       | Overhead thread tinggi           |
 |                   | Blocking (client lain nunggu)| Kurang efisien untuk banyak client | Tidak tersedia di Windows penuh | Bisa boros memori & CPU          |
 
->>>>>>> 541dd07 (Tugas Progjar: Implementasi 4 Arsitektur Server)
+
