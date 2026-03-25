@@ -63,15 +63,18 @@ Sistem menggunakan prefix perintah untuk membedakan jenis data:
 
 ### 1. Hasil Pengujian Synchronous
 <img width="914" height="282" alt="image" src="https://github.com/user-attachments/assets/d75b8a7c-a4fd-44df-8937-8288cb59bdfe" />
+
 **Analisis:** Pada screenshot ini terlihat bahwa saat Klien A terhubung, Klien B yang mencoba masuk tidak mendapatkan respon apa pun dari server. Hal ini terjadi karena thread utama server "terkunci" pada fungsi `recv()` milik Klien A. Koneksi Klien B baru diproses setelah *socket* Klien A ditutup.
 
 ### 2. Hasil Pengujian Threading
 <img width="867" height="284" alt="image" src="https://github.com/user-attachments/assets/763d3620-4ccb-4aec-a5ad-0365c89ac1cd" />
+
 **Analisis:** Screenshot menunjukkan Klien A sedang melakukan proses `/upload` file, namun di saat yang sama, pesan chat dari Klien B tetap muncul di layar. Ini membuktikan bahwa setiap klien memiliki *resource* CPU masing-masing dalam bentuk thread, sehingga operasi I/O yang berat tidak menghentikan layanan untuk klien lain.
 
 ### 3. Hasil Pengujian Select & Poll
 <img width="857" height="288" alt="image" src="https://github.com/user-attachments/assets/227b1c96-fafd-46af-853c-c8ce5fd6c013" />
 <img width="861" height="280" alt="image" src="https://github.com/user-attachments/assets/2022cf09-d11a-42a6-9a31-89ea1a8505a6" />
+
 **Analisis:** Terlihat di terminal server bahwa sistem mampu mengelola lebih dari dua klien secara bersamaan dalam satu iterasi *loop*. Perbedaan utama pada screenshot `Poll` (di WSL) adalah kemampuannya menangani banyak koneksi tanpa batasan jumlah socket, berbeda dengan `Select` yang memiliki limitasi.
 
 ---
